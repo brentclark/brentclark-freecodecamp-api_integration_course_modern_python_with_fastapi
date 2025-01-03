@@ -13,4 +13,4 @@ class TaskResponse(BaseModel):
 class TranslationStatus(BaseModel):
     task_id: PositiveInt
     status: StrictStr
-    translation: dict[StrictStr, StrictStr]
+    translations: dict[StrictStr, StrictStr]

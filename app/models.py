@@ -1,5 +1,3 @@
-from typing import Dict
-
 from pydantic import StrictStr
 from sqlalchemy import JSON, Column
 from sqlmodel import Field, SQLModel
@@ -11,4 +9,4 @@ class TranslationTask(SQLModel, table=True):
     text: StrictStr = Field(..., nullable=False)
     languages: dict = Field(default_factory=dict, sa_column=Column(JSON))
     status: StrictStr = Field(default="in progress")
-    translation: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    translations: dict = Field(default_factory=dict, sa_column=Column(JSON))

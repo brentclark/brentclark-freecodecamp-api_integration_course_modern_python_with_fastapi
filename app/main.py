@@ -4,7 +4,6 @@ from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request, s
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from icecream import ic
 from sqlmodel import Session
 
 from app.crud import create_translation_task, get_translation_task
@@ -42,11 +41,11 @@ def index(request: Request):
 
 @app.post("/translate", response_model=TaskResponse)
 def translate(
-    request: TranslationRequest, background_tasks: BackgroundTasks, db: SessionDep,
+    request: TranslationRequest, background_tasks: BackgroundTasks, db: SessionDep
 ):
     task = create_translation_task(db, request.text, request.languages)
     background_tasks.add_task(
-        perform_translation, task.id, request.text, request.languages,
+        perform_translation, task.id, request.text, request.languages
     )
     return {"task_id": task.id}
 
@@ -54,7 +53,6 @@ def translate(
 @app.get("/translate/{task_id}", response_model=TranslationStatus)
 def get_translate_status_by_id(task_id: int, db: SessionDep):
     task = get_translation_task(db, task_id)
-    print(task)
 
     if not task:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="task not found")
@@ -62,5 +60,16 @@ def get_translate_status_by_id(task_id: int, db: SessionDep):
     return {
         "task_id": task.id,
         "status": task.status,
-        "translation": task.translation,
+        "translations": task.translations,
     }
+
+
+@app.get("/translate/content/{task_id}")
+def get_translate_content(task_id: int, db: SessionDep):
+    task = get_translation_task(db, task_id)
+    print(task)
+
+    if not task:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="task not found")
+
+    return task

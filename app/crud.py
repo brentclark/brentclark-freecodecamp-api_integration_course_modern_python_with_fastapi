@@ -32,7 +32,7 @@ def update_translation_task(task_id: int, translations: dict):
         results = db.exec(task)
         text = results.one()
         # ic("Text:", text)
-        text.translation = translations
+        text.translations = translations
         text.status = "completed"
         db.add(text)
         db.commit()
